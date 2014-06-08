@@ -1,11 +1,11 @@
-!!! 5
+doctype 5
 html(lang="en")
 	head
 		link(rel="stylesheet", type="text/css", href="#{req.rootDir}style.css")
 		script(type="text/javascript", src="#{req.rootDir}scripts/jquery.js")
 		script(type="text/javascript", src="#{req.rootDir}scripts/diff_match_patch.js")
 		script(type="text/javascript", src="#{req.rootDir}scripts/editor.js")
-		title VibeNotes
+		title VibeNotes | Channel '#{name}'
 	body(onLoad="setupEditor()")
 		h1 Editor for pad '#{req.params["name"]}':
 		p The contents of this edit box are synchronized among all viewers of 

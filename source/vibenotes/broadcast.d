@@ -57,6 +57,7 @@ class WebSocketBroadcastService {
 		return chann.keys;
 	}		
 }
+
 /// Non standard helper interface !!! seriously don't use it !!!
 interface LockableManualEvent:ManualEvent {
 	/// Releases the ownership of the object.

@@ -60,3 +60,57 @@ void registerVibeNotes(URLRouter router)
 {
 	new VibeNotes(router);
 }
+
+class vibenotes_web 
+{
+	import vibe.web.web:SessionVar;
+	import vibenotes.broadcast;
+	
+	private WebSocketBroadcastService m_broadcastService;
+	
+	private auto s_user = SessionVar!(
+		Tupel!(string,"username",bool,"loggedIn"),
+		"user");
+		
+	void getIndex()
+	{
+		redirect("home");
+	} 
+	
+	void getHome(string name)
+	{
+		if (name) {
+			redirect("/n/"~name);
+		} else {
+			render!"home.dt"(m_broadcastService.channels);
+		}
+	}
+	
+	void getEditor(string name) 
+	{
+		render!"editor.dt"(name);
+	} 
+	
+	void getLogin(string error = null)
+	{
+		if(session) {
+			terminateSession;
+		}
+		render!"login.dt"(error);
+	}
+	@errorDisplay!getLogin
+	void postLogin(string username, string password) 
+	{	
+		
+		enforceHTTP(username.length > 0, HTTPStatus.forbidden,
+				"User name must not be empty.");
+		enforceHTTP(username.checkpassword(password), HTTPStatus.forbidden,
+			"Invalid password.");
+	
+		s_user.username = username;
+		s_user.loggedIn = true;
+	
+		redirect("/");
+	}
+		
+}

@@ -6,7 +6,8 @@ shared static this()
 	setLogLevel(LogLevel.info);
 	
 	auto router = new URLRouter;
-	registerVibeNotes(router);
+	registerWebInterface(router,new vibenotes_web);
+	//registerVibeNotes(router);
 	
 	auto settings = new HTTPServerSettings;
 	settings.sessionStore = new MemorySessionStore();
