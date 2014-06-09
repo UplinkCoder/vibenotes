@@ -8,13 +8,13 @@ import vibe.core.sync;
 
 class WebSocketBroadcastService {
 	private {
-		LockableManualEvent m_signal;
+		ManualEvent m_signal;
 		string[][WebSocket] m_queues;
 		string[WebSocket] m_channels;
 	}
 
 	this() {
-		m_signal = cast(LockableManualEvent)createManualEvent();
+		m_signal = createManualEvent() ;
 	}
 
 	void handleRequest(HTTPServerRequest req, HTTPServerResponse res) {
@@ -22,10 +22,11 @@ class WebSocketBroadcastService {
 		auto channel = pv ? *pv : "default";
 
 		logInfo("Channel: %s", channel);
-		auto callback = handleWebSockets( (socket) {
+		scope callback = handleWebSockets( (scope socket) {
 			m_queues[socket] = [];
 			m_channels[socket] = channel;
-			m_signal.acquire();
+//			m_signal.acquire();
+			//TODO get this stuff threadsafe
 			while( socket.connected ) {
 				if( socket.dataAvailableForRead() ) {
 					auto data = socket.receiveBinary();
@@ -42,7 +43,7 @@ class WebSocketBroadcastService {
 				m_queues[socket] = [];
 				rawYield();
 			}
-			m_signal.release();
+//			m_signal.release();
 			m_queues.remove(socket);
 		});
 
@@ -56,16 +57,4 @@ class WebSocketBroadcastService {
 				chann[v] = 1;
 		return chann.keys;
 	}		
-}
-
-/// Non standard helper interface !!! seriously don't use it !!!
-interface LockableManualEvent:ManualEvent {
-	/// Releases the ownership of the object.
-	void release();
-	
-	/// Acquires the ownership of an unowned object.
-	void acquire();
-	
-	/// Returns true if the calling fiber owns this object
-	bool amOwner();
 }

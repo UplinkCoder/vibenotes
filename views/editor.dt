@@ -7,9 +7,9 @@ html(lang="en")
 		script(type="text/javascript", src="#{req.rootDir}scripts/editor.js")
 		title VibeNotes | Channel '#{name}'
 	body(onLoad="setupEditor()")
-		h1 Editor for pad '#{req.params["name"]}':
+		h1 Editor for pad '#{name}':
 		p The contents of this edit box are synchronized among all viewers of 
-			a(href='/n/#{req.params["name"]}') this vibenotes pad
+			a(href='/editor?name=/#{name}') this vibenotes pad
 			|.
 		p You can also go back to the
 			a(href='/') main page 
