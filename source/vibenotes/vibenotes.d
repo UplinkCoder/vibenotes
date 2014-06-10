@@ -97,9 +97,11 @@ class vibenotes_web
 		}
 	}
 	
-	void getEditor(string name) 
+	void getEditor() 
 	{
+		string name = "default";
 		render!("editor.dt",name);
+
 	} 
 	
 	void getLogin(string error = null)
